@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import scrapy, sys
+from lxml import html
 
 class HabraProfileParser(scrapy.Spider):
 	name = 'profile'
@@ -11,9 +12,10 @@ class HabraProfileParser(scrapy.Spider):
 
 	def parse(self, response):
 		for comment in response.css('.content-list__item_comment-plain'):
-			messages = comment.css('.comment__message::text').extract()
-			if messages:
-				yield { 'comment': "\n".join(messages).encode('utf-8').strip() }
+			messages = comment.css('.comment__message')
+			if len(messages) > 0:
+				message = messages[0]._root
+				yield { 'comment': (message.text or '') + "\n".join([html.tostring(child) for child in message.iterchildren()]).encode('utf-8').strip() }
 
 		next_page = response.css('.arrows-pagination__item-link_next::attr("href")').extract_first()
 		if next_page is not None:

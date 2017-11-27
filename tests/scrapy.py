@@ -15,7 +15,11 @@ class TestScrapyImport(unittest.TestCase):
         all_outputs = os.listdir(OUT_DIR)
         habra_outputs = filter(lambda name: name.startswith('habr'), all_outputs)
         for habrafile in habra_outputs:
-            posts = ScrapyImport.file_to_array(OUT_DIR + '/' + habrafile)
+            try:
+                posts = ScrapyImport.posts_cleanup(ScrapyImport.file_to_array(OUT_DIR + '/' + habrafile))
+            except Error:
+                logging.error(Error)
+                die
             for post_i, post in enumerate(posts):
                 try:
                     self.assertNotEqual(post, "")
