@@ -16,7 +16,7 @@ class TestScrapyImport(unittest.TestCase):
         habra_outputs = filter(lambda name: name.startswith('habr'), all_outputs)
         for habrafile in habra_outputs:
             try:
-                posts = ScrapyImport.posts_cleanup(ScrapyImport.file_to_array(OUT_DIR + '/' + habrafile))
+                posts = ScrapyImport.texts_cleanup(ScrapyImport.file_to_array(OUT_DIR + '/' + habrafile))
             except Error:
                 logging.error(Error)
                 die

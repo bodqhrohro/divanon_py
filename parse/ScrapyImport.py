@@ -13,9 +13,15 @@ class ScrapyImport:
 		return [item[0].text for item in root]
 
 	@staticmethod
-	def _post_cleanup(post):
+	def _text_cleanup(text):
 		global cleaner
-		raw_html = cleaner.clean_html(post)
+		raw_html = cleaner.clean_html(text)
+		# TODO: remove links
+		# TODO: remove code
+		# TODO: remove Latin
+		# TODO: remove garbage
+		# TODO: replace Latin omographs with Cyrillic
+		# TODO: unify qmarks
 		if len(raw_html) > 0:
 			unwrap_regex = re.compile(r'\A<div>(.*?)</div>\Z', flags=re.MULTILINE | re.DOTALL)
 			cut_html = unwrap_regex.match(raw_html).group(1)
@@ -24,8 +30,7 @@ class ScrapyImport:
 			return None
 
 	@staticmethod
-	def posts_cleanup(posts):
-		return list(filter(lambda s: len(s) > 0, map(ScrapyImport._post_cleanup, posts)))
-
+	def texts_cleanup(texts):
+		return list(filter(lambda s: len(s) > 0, map(ScrapyImport._text_cleanup, texts)))
 
 cleaner = Cleaner(allow_tags=[''], remove_unknown_tags=None, kill_tags=['code', 'blockquote', 's', 'strike'])
