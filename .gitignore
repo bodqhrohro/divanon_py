@@ -3,3 +3,4 @@ __pycache__
 data/
 *.sw?
 error.log
+nltk_data

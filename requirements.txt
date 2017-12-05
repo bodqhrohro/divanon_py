@@ -1,0 +1,4 @@
+scrapy
+lxml
+pymorphy2
+nltk
