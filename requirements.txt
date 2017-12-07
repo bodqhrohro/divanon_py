@@ -2,3 +2,6 @@ scrapy
 lxml
 pymorphy2
 nltk
+scikit-learn
+numpy
+scipy

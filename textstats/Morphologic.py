@@ -1,8 +1,11 @@
 import nltk
 import pymorphy2
 from collections import defaultdict
+import numpy as np
 
 morph = pymorphy2.MorphAnalyzer()
+
+PARTS_OF_SPEECH = ['PRED', 'PREP', 'CONJ', 'PRCL', 'INTJ']
 
 def _text_to_words(text):
     return nltk.word_tokenize(text)
@@ -29,3 +32,7 @@ class Morphologic:
                 if (p.tag.POS != None):
                     PoS_dict[p.tag.POS] += float(p.score)
         return PoS_dict
+
+    def dict_to_np_array(PoS_dict):
+        global PARTS_OF_SPEECH
+        return np.array(list(map(lambda PoS: PoS_dict[PoS] if PoS in PoS_dict else 0, PARTS_OF_SPEECH)))
