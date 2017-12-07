@@ -18,8 +18,8 @@ class TestWordStats(unittest.TestCase):
         for habrafile in habra_outputs:
             try:
                 posts = ScrapyImport.texts_cleanup(ScrapyImport.file_to_array(OUT_DIR + '/' + habrafile))
-            except Error:
-                logging.error(Error)
+            except IOError:
+                logging.error(IOError)
                 die
             for post_i, post in enumerate(posts):
                 try:
