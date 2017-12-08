@@ -1,3 +1,5 @@
+import matplotlib as mpl
+mpl.use('Agg')
 from matplotlib import pyplot as plot
 from sklearn.decomposition import PCA
 import numpy as np
