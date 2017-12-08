@@ -15,7 +15,7 @@ class HabraProfileParser(scrapy.Spider):
 			messages = comment.css('.comment__message')
 			if len(messages) > 0:
 				message = messages[0]._root
-				yield { 'comment': (message.text or '') + str("\n".join([html.tostring(child) for child in message.iterchildren()]).encode('utf-8').strip()) }
+				yield { 'comment': (message.text or '') + str("\n".join([str(html.tostring(child)) for child in message.iterchildren()]).encode('utf-8').strip()) }
 
 		next_page = response.css('.arrows-pagination__item-link_next::attr("href")').extract_first()
 		if next_page is not None:
