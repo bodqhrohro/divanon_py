@@ -1,0 +1,255 @@
+#	Cascade Correlation Learning Algorithm
+#	Help File
+#
+#	v1.0
+#	Matt White  (mwhite+@cmu.edu)
+#	7/8/93
+#
+$HELP
+In order to conduct a program run, specify a data set using the loadData
+command.  Then type 'go'.  The program run will then begin using the
+parameters specified.
+
+To receive help on any of the other parameters, type:
+
+	help <parameter name>
+
+
+If you have any further questions (or find a bug), send email to:
+
+	neural-bench@cs.cmu.edu
+
+$REDPOP
+Redpop is the TIP god of Luck and Fortune on the Ultimate Field.
+$BIAS
+Bias is the value that the bias unit should take on for each pattern
+presentation.  This value is constant across all patterns.
+$CANDCHANGETHRESHOLD
+candChangeThreshold is a measure of how much the correlation value of the 
+best candidate unit must change from its previous best before this change 
+is considered significant.  This is used for stagnation calculation.
+$CANDDECAY
+candDecay is the amount that the slope of each weight coming into a 
+candidate unit is decreased each epoch.  This prevents weights from 
+becoming astronomically large and overflowing the internal floating
+point calculations.
+
+This can usually be set to 0.00 and left there.  If the program seems to be
+developing really huge candidate weights (> 100 or so), try setting the 
+decay to something like 0.0001.  On a few problems that lack enough training
+cases to get good generalization, Scott's been able to get better
+generalization scores by setting this parameter to larger values (such as
+0.01), but Scott seems to think that this may be due to luck.
+$CANDEPOCHS
+candEpochs is the maximum number of epochs to train the candidate units
+before selecting the best unit and adding it to the network.  Usually,
+the network will stagnate long before this occurs.
+
+This value should be set high enough so that you hardly ever see a TIMEOUT
+result.
+$CANDEPSILON
+candEpsilon is the epsilon value used to train the candidate units.  This
+epsilon value will be internally scaled by fan-in before it is used.
+
+This is the tricky one.  It can vary over many orders of magnitude, 
+depending on the problem (i.e. from 1000 to 0.01 or so).  Basically, you 
+want to see steady improvement in the error measure or score.  You'll 
+occasionally see an epoch or two in which the score retreats from the 
+best obtained so far, but if the lost ground isn't made up in the next 
+few epochs, you're probably in the chaotic region and need to reduce the 
+epsilon that is relevant to the current learning phase.  If you see steady 
+but weak convergence, especially near the end of the training phase, you 
+want to turn it up.
+$CANDMU
+candMu is the maximum growth factor discussed in Fahlman's paper, "An
+Empirical Study of Learning Speed in Back-Propogation Networks".  No
+weight is allowed to grow more than mu times the previous step taken.
+This prevents a series of changes in the same direction from fooling
+quickprop into making an extremely large weight change.
+
+Set it to 2.00 and leave it there.  If your problem seems determined to
+oscillate, turn it down to 1.75 or 1.5.  Very few problems use values of
+higher than 2.00.
+$CANDNEWTYPE
+candNewType is the type of unit to use to compose the candidate pool.
+Currently available units are: SIGMOID [-0.5,0.5], ASIGMOID [0.0,1.0],
+VARSIGMOID [sigMin,sigMax] and GAUSSIAN.  In addition, if a mixed pool
+is desired, type VARIED may be selected, causing an equal number of units
+from each type to be used.
+$CANDPATIENCE
+candPatience is the number of epochs to continue training without noticable
+improvement before training is declared stagnant and training stopped.
+
+Depends on how complicated the space is and whether you place more
+emphasis on minimal learning time or minimal units.  Even if you want
+minimal learning time, you want to set the patience high enough to ensure
+that there's not much more to be squeezed out of each training phase --
+extra units cost more time than you save by keeping patience low.  I often
+turn both patience parameters up to 12 or 15.
+$ERRORINDEXTHRESHOLD
+errorIndexThreshold is the error index to beat when the scoring method is
+an index (used when continuous outputs are present).  Training is stopped
+and victory declared whenever error index drops below errorIndexThreshold.
+$ERRORMEASURE
+errorMeasure is used to determine the correctness of the network's response
+to a set of inputs.  A measure value of BITS means that the number of
+incorrect responses (ie. not within scoreThreshold of the correct answer)
+are counted.  A measure value of INDEX calculates the Lapedes and Faber
+index and uses that to measure whether victory has been achieved.
+$MAXNEWUNITS
+maxNewUnits is the maximum number of new units to add to the network.  This
+does NOT include bias, inputs or outputs.
+$NCANDS
+Ncands is the number of candidate units to place in the training pool.  The
+best of these units will be selected to be added to the network.
+$NTRIALS
+Ntrials is the number of networks to train on this data set.  Results will
+be reported for each trial.
+$OUTDECAY
+outDecay is the amount that the slope of each weight coming into an output
+unit is decreased each epoch.  This prevents weights from becoming
+astronomically large and overflowing the internal floating point
+calculations.
+
+This can usually be set to 0.00 and left there.  If the program seems to be
+developing really huge output weights (> 100 or so), try setting the output
+decay to something like 0.0001.  On a few problems that lack enough training
+cases to get good generalization, Scott's been able to get better
+generalization scores by setting this parameter to larger values (such as
+0.01), but Scott seems to think that this may be due to luck.
+$OUTEPOCHS
+outEpochs is the maximum number of epochs to train the output units
+before training a new set of candidate units.  Usually, the network will 
+stagnate long before this occurs.
+
+This value should be set high enough so that you hardly ever see a TIMEOUT
+result.
+$OUTEPSILON
+outEpsilon is the epsilon value used to train the output units.  This
+epsilon value will be internally scaled by fan-in before it is used.
+
+This is the tricky one.  It can vary over many orders of magnitude, 
+depending on the problem (i.e. from 1000 to 0.01 or so).  Basically, you 
+want to see steady improvement in the error measure or score.  You'll 
+occasionally see an epoch or two in which the score retreats from the 
+best obtained so far, but if the lost ground isn't made up in the next 
+few epochs, you're probably in the chaotic region and need to reduce the 
+epsilon that is relevant to the current learning phase.  If you see steady 
+but weak convergence, especially near the end of the training phase, you 
+want to turn it up.
+$OUTERRORTHRESHOLD
+outErrorThreshold is a measure of how much the error from the outputs
+must change from their previous best before this change is considered 
+significant.  This is used for stagnation calculation.
+$OUTMU
+outMu is the maximum growth factor discussed in Fahlman's paper, "An
+Empirical Study of Learning Speed in Back-Propogation Networks".  No
+weight is allowed to grow more than mu times the previous step taken.
+This prevents a series of changes in the same direction from fooling
+quickprop into making an extremely large weight change.
+
+Set it to 2.00 and leave it there.  If your problem seems determined to
+oscillate, turn it down to 1.75 or 1.5.  Very few problems use values of
+higher than 2.00.
+$OUTPATIENCE
+outPatience is the number of epochs to continue training without noticable
+improvement before training is declared stagnant and training stopped.
+
+Depends on how complicated the space is and whether you place more
+emphasis on minimal learning time or minimal units.  Even if you want
+minimal learning time, you want to set the patience high enough to ensure
+that there's not much more to be squeezed out of each training phase --
+extra units cost more time than you save by keeping patience low.  I often
+turn both patience parameters up to 12 or 15.
+$OUTSIGMAX
+outSigMax is the maximum value that VARSIGMOID outputs will take on.  It
+is generally not advisable to change this value since it will be set to
+take on appropriate values for the binary outputs of the network
+automatically.
+$OUTSIGMIN
+outSigMin is the minimum value that VARSIGMOID outputs will take on.  It
+is generally not advisable to change this value since it will be set to
+take on appropriate values for the binary outputs of the network
+automatically.
+$PARSEINBINARY
+parseInBinary describes how the data file parser should deal with input
+enumerations.  Normally, an input unit is assigned to each possible
+value of an enumerated type.  Only one of these units will be active at
+a time.  From a learning standpoint, this is the best method to use,
+since the network doesn't have to learn binary representations.
+However, if memory is of extreme concern, then parseInBinary and
+parseOutBinary can be set to TRUE, causing a binary representation to
+be used.  This is harder for the network to learn, but will save memory.
+$PARSEOUTBINARY
+parseOutBinary describes how the data file parser should deal with output
+enumerations.  Normally, an output unit is assigned to each possible
+value of an enumerated type.  Only one of these units will be active at
+a time.  From a learning standpoint, this is the best method to use,
+since the network doesn't have to learn binary representations.
+However, if memory is of extreme concern, then parseOutBinary and
+parseInBinary can be set to TRUE, causing a binary representation to
+be used.  This is harder for the network to learn, but will save memory.
+$SCORETHRESHOLD
+scoreThreshold is used to designate how close a binary output has to be to
+the correct value before it is considered correct.  The smaller this value,
+the closer the network has to be to the value specified.
+
+This is just a question of how you want to report your results.  Usually 
+leave it at 0.4 for outputs that are meant to be binary-valued, unless 
+you want to compare results with some other authorwho used 0.3 or whatever.  
+Making this smaller for no good reason might lead to over-training.
+$SIGMAX
+sigMax is the maximum value that VARSIGMOID candidates will take on.  Set 
+this to any value desired, as long as it is above sigMin.
+$SIGMIN
+sigMin is the minimum value that VARSIGMOID candidates will take on.  Set
+this to any value desired, as long as it is below sigMax.
+$SIGPRIMEOFFSET
+sigPrimeOffset is used to eliminate the 'flat spot' in output training only.
+It turns out that adding offset to the candidate sigmoid-prime values
+confuses the correlation machinery.  For more information on the benefits
+of adding an offset to the sigmoid prime values, see Fahlman's paper, "An
+Empirical Study of Learning Speed in Back-Propogation Networks".
+$TEST
+If test is TRUE and testing data is available, run a test epoch at the end
+of each trial.  This is a good measure of the generalization ability of the
+network.
+$USECACHE
+Since the internal values of the network are frozen after the initial
+training, it is possible to cache activation and error values for each 
+training pattern.  While this uses alot of memory, it increases performance
+considerably.  If this value is set to TRUE (default) the program will
+attempt to allocate memory for this cache.  If the allocation fails, the
+cache will be turned off.  This should protect against running out of memory
+in most situations except when the system has just barely enough memory for
+the cache.  In these cases, a situation may arise that causes other memory
+allocations to fail.  In this event, the cache should be turned off 
+manually.
+$VALIDATE
+Run a validation epoch every cycle, provided that either a validation or
+testing data set is available.  Validation can help insure that performance
+on the testing set is improving.  The program keeps track of the network
+status during its point of best performance.  If this performance does not
+improve for a number of cycles dictated by valPatience, the network is
+restored to its position of best performance and the trial is stopped.
+$VALPATIENCE
+valPatience is the number of cycles through the output and candidate
+training phases, without improvement, before the network is reset to
+its position of best performance and the trial is stopped.
+$WEIGHTMULTIPLIER
+weightMultiplier is multiplied times the initial guesses at the output
+weights.  Thus, if these guesses are consisitantly too small, then it might
+be profitable to increase the weight multiplier.  The reverse is also true.
+$WEIGHTRANGE
+weightRange is used to initialize the random starting weights.  These
+values are between +/-weightRange.
+
+Just leave this value at 1.0.  It doesn't seem to matter much.
+$WINRADIUS
+In order to deal with sequence data sets (ie. data sets where a pattern's
+neighbors effect eachother), this program uses a nettalk-like setup, where
+the current pattern's neighbors are presented at the same time as the
+pattern.  WinRadius is the number of patterns before and after to present
+at the same time.  In other words, a value of '1' indicates the patterns
+immediately in front and behind the current pattern while a '7' would cause
+a total of 15 patterns to be presented at once.

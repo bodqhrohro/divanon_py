@@ -5,7 +5,9 @@ from random import shuffle
 from divanon.parse.ScrapyImport import ScrapyImport
 import divanon.analytic.utils as utils
 from divanon.textstats.Morphologic import Morphologic
+from divanon.classifiers.MLP import MLP
 from divanon.classifiers.SVM import SVM
+from divanon.classifiers.CCN import CCN
 import divanon.vis.pcaplot as pcaplot
 
 def randomly_split_sets(filenames):
@@ -29,26 +31,31 @@ def randomly_split_sets(filenames):
 
     train_pairs, control_pairs = utils.randomly_split_list(authors_pairs, 0.63 * len(authors_pairs))
 
-    svm = SVM()
-
     train_posts, train_authors_numbers = zip(*train_pairs)
     train_posts = np.array(list([utils.normalize_np_array(Morphologic.dict_to_np_array(Morphologic.get_PoS_distribution(post))) for post in train_posts]))
     train_authors_numbers = np.array(train_authors_numbers)
 
-    pcaplot.plot_hyperplane(train_posts, train_authors_numbers, 'tist.png')
+    #pcaplot.plot_hyperplane(train_posts, train_authors_numbers, 'tist.png')
 
-    svm.train(train_posts, train_authors_numbers)
+    svm = SVM(verbose = False)
+    mlp = MLP(verbose = False)
+    ccn = CCN('tist', verbose = False)
+    classifiers = [ svm, mlp, ccn ]
+
+    for classifier in classifiers:
+        classifier.train(train_posts, train_authors_numbers)
 
     control_posts, control_authors_numbers = zip(*control_pairs)
     control_posts = np.array(list([utils.normalize_np_array(Morphologic.dict_to_np_array(Morphologic.get_PoS_distribution(post))) for post in control_posts]))
     control_authors_numbers = np.array(control_authors_numbers)
 
-    estimated_author_numbers = svm.estimate(control_posts)
-    print(estimated_author_numbers)
+    for classifier in classifiers:
+        estimated_author_numbers = classifier.estimate(control_posts)
+        print(estimated_author_numbers)
 
-    success_count = 0
-    for estimated_author, control_author in zip(control_authors_numbers, estimated_author_numbers):
-        if estimated_author == control_author:
-            success_count += 1
+        success_count = 0
+        for estimated_author, control_author in zip(control_authors_numbers, estimated_author_numbers):
+            if estimated_author == control_author:
+                success_count += 1
 
-    print(success_count / len(control_authors_numbers))
+        print(success_count / len(control_authors_numbers))
