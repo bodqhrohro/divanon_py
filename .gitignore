@@ -5,3 +5,4 @@ data/
 error.log
 nltk_data
 divanon/vendor/cascor/v110/cascor
+.ropeproject
